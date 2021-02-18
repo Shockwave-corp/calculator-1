@@ -1,5 +1,7 @@
 #CALCULATOR
 import PySimpleGUI as sg
+global window_2
+window_2 = sg.Window
 menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],['&Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],['&Help', '&About...']]
 right_click_menu = ['Unused', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']]
 def initial_window():
@@ -26,21 +28,19 @@ def initial_window():
 
 
 
-
-
-
 def calculator_window():
-    kt =False
-    kp =False
+    counter = "none"
     sg.theme('Dark Amber 5')
     refrigerant_list = [['R-134A'], ['water'], ['steam'],['dheeresh'], ['saransh']]
     pressure_units = [['Pa'],['Bar'],['mmHg'],['kg/m^2'],['atm'],['torr'],['lbf/inch^2']]
     temperature_units =[['celcius'], ['Kelvin'], ['Fahrenheit']]
     layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
         [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-        [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value="select the refrigerant",font= ("Calibri", 20),)],
+        [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value="select the refrigerant",font= ("Calibri", 20),key="data_type")],
         [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=False,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=False,key='Temperature')],
-        [sg.Input(default_text = "enter the values", size=(25, 1), font=("Algerian", 25),key="__IN__"),sg.Drop(temperature_units,size=(10,1),auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=False,key="units")],
+        [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
+        [sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__"),sg.Drop(temperature_units,size=(10,1),auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=False,key="units")],
+        [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
         [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
     window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
     while True:
@@ -49,30 +49,40 @@ def calculator_window():
             window_2.close()
             callback()
             break
-        elif event =="Temperature":
-            layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
-            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-            [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value="select the refrigerant",font= ("Calibri", 20),)],
-            [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=False,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=True,key='Temperature')],
-            [sg.Input(default_text = "enter the values", size=(25, 1), font=("Algerian", 25),key="__IN__"),sg.Drop(temperature_units,size=(10,1),auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=True,key="units")],
-            [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
-            window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
-        elif event =="Pressure":
-            window_2['Temperature'].Update(False)
-            layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
-            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-            [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value="select the refrigerant",font= ("Calibri", 20),)],
-            [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=True,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=False,key='Temperature')],
-            [sg.Input(default_text = "enter the values", size=(25, 1), font=("Algerian", 25),key="__IN__"),sg.Drop(pressure_units,size=(10,1),auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=True,key="units")],
-            [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
-            window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
 
+        elif event =="Temperature":
+            a= values["data_type"]
+            window_2.close()
+            layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
+            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
+            [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value = a,font= ("Calibri", 20),key="data_type")],
+            [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=False,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=True,key='Temperature')],
+            [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
+            [sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__",enable_events=True),sg.Drop(temperature_units,size=(10,1),default_value="celcius",auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=True,key="units")],
+            [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
+            [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
+            window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
+            counter ="T"
+        elif event == "Pressure":
+            a= values["data_type"]
+            window_2.close()
+            layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
+            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
+            [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value=a,font= ("Calibri", 20),key="data_type")],
+            [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=True,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=False,key='Temperature')],
+            [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
+            [sg.Input(size=(25, 1), font=("Algerian", 25),key="__IN__",enable_events=True),sg.Drop(pressure_units,size=(10,1),default_value="Pa",auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=True,key="units")],
+            [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
+            [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
+            window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
+            counter= "P"
+        elif event == "RESULT":
+            value = values["__IN__"]
+            unit = values["units"]
+            d_type = values["data_type"]
+            calculation(d_type,value,unit,counter)
         elif event == "EXIT" or event == sg.WIN_CLOSED:
             break
-
-
-
-
 
 
 def about_window():
@@ -91,9 +101,22 @@ def about_window():
             window_3.close()
             callback()
             break
-        if event == "EXIT" or event == sg.WIN_CLOSED:
+        elif event == "EXIT" or event == sg.WIN_CLOSED:
             break
     window.close()
+
+def calculation(data_type,value,unit,type):
+    if data_type == "select the refrigerant" or type == "none" or value == "":
+        if data_type == "select the refrigerant": 
+            sg.popup_cancel("select the refrigerant")
+        elif type == "none":
+            sg.popup_cancel("select the teperature or pressure")   
+        elif value == "":
+            sg.popup_cancel("enter the value")
+    elif type=="P":
+        print("hurr")
+    elif type=="T":
+        print("churr")
 def callback():
     initial_window()
 
