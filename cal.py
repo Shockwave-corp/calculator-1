@@ -1,4 +1,6 @@
 #CALCULATOR
+import openpyxl
+from pathlib import Path
 import PySimpleGUI as sg
 global window_2
 window_2 = sg.Window
@@ -29,6 +31,7 @@ def initial_window():
 #Saransh is great
 
 def calculator_window():
+    x =False
     counter = "none"
     sg.theme('Dark Amber 5')
     refrigerant_list = [['R-134A'], ['water'], ['steam'],['dheeresh'], ['saransh']]
@@ -80,7 +83,11 @@ def calculator_window():
             value = values["__IN__"]
             unit = values["units"]
             d_type = values["data_type"]
-            calculation(d_type,value,unit,counter)
+            x = error_check(d_type,value,unit,counter)
+            if x == True:
+                calculation(d_type,value,unit,counter)
+            else:
+                pass
         elif event == "EXIT" or event == sg.WIN_CLOSED:
             break
 
@@ -105,7 +112,7 @@ def about_window():
             break
     window.close()
 
-def calculation(data_type,value,unit,type):
+def error_check(data_type,value,unit,type):
     if data_type == "select the refrigerant" or type == "none" or value == "":
         if data_type == "select the refrigerant": 
             sg.popup_cancel("select the refrigerant")
@@ -113,10 +120,49 @@ def calculation(data_type,value,unit,type):
             sg.popup_cancel("select the teperature or pressure")   
         elif value == "":
             sg.popup_cancel("enter the value")
-    elif type=="P":
-        print("hurr")
-    elif type=="T":
-        print("churr")
+    else:
+        return True
+
+
+def calculation(data_type,value,unit,type):
+    comp1 =['R-134A']
+    comp2 =['water']
+    comp3= ['air']
+    comp4= ['dheeresh']
+    comp5=["saransh"]
+    if data_type == comp1:
+        str_file = "r1344a"
+    elif data_type == comp2:
+        str_file = "water"
+    elif data_type == comp3:
+        str_file ="air"
+    elif data_type == comp4:
+        str_file ="dheeresh"
+    elif data_type == comp5:
+        str_file ="saransh"
+    xlsx_file = Path('/Users/DHEERESH\Desktop/calculator', str_file + ".xlsx")
+    file = openpyxl.load_workbook(xlsx_file)
+    sheet = file.active
+    i=1
+    k=0
+    while i<=40:
+        if sheet["A" + str(i)].value == value:
+            print(value)
+            print(sheet["A" + str(i)].value)
+            print("mila gaya ")
+            k=1
+        else:
+            print("dhoondh raha")
+            print(value)
+            print(sheet["A" + str(i)].value)
+            print(i)
+        if k==0:
+            i=i+1
+        else:
+            break
+
+
+
 def callback():
     initial_window()
 
