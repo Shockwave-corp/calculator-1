@@ -9,7 +9,7 @@ right_click_menu = ['Unused', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties
 def initial_window():
     sg.theme('Dark Amber 5')
     layout = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
-            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 40))],
+            [sg.Text('WELCOME TO THERMODYNAMIC PROPERTIES CALCULATOR', auto_size_text=True ,justification='center', font=("Algerian", 40))],
             [sg.Button("GO TO CALCULATOR",auto_size_button=True,font=("Algerian", 25))],
             [sg.Button("ABOUT DEVELOPERS",auto_size_button=True,font=("Algerian", 25),)],
             [sg.Button("EXIT",auto_size_button=True)]]
@@ -29,65 +29,117 @@ def initial_window():
             break
 
 #Saransh is great
-
+def type_selector_window():
+    refrigerant_list = ['Water','Steam','Air','Tetraflouroethane-R134a']
+    sg.theme('Dark Amber 5')
+    layout_type =[[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
+    [sg.Text("Select the Property",size=(20,2),auto_size_text=True,font= ("Calibri", 20))],
+    [sg.Button(refrigerant_list[0],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data")],
+    [sg.Button(refrigerant_list[1],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data1")],
+    [sg.Button(refrigerant_list[2],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data2")],
+    [sg.Button(refrigerant_list[3],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data3")],
+    [sg.Button("EXIT"),sg.Button("PREVIOUS")]]  
+    window_type = sg.Window(title="CALCULATOR", layout = layout_type,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
+    while True:
+        event, values = window_type.read()
+        if event == "PREVIOUS":
+            window_type.close()
+            callback()
+            break
+        elif event == "data":
+            name = "Water"
+            window_type.close()
+            break
+        elif event == "data1":
+            name = "Steam"
+            window_type.close()
+            break
+        elif event == "data2":
+            name = "Air"
+            window_type.close()
+            break
+        elif event == "data3":
+            name = "Tetraflouroethane-R134a"
+            window_type.close()
+            break
+        elif event == "EXIT" or event == sg.WIN_CLOSED:
+            break
+    return name
+    
 def calculator_window():
+    name = type_selector_window()
+    if name=="Steam":
+        name2="saturated steam"
+        name1="superheated steam"
+    else:
+        name1=name
+        name2=" saturated "+name
     x =False
     counter = "none"
     sg.theme('Dark Amber 5')
-    refrigerant_list = [['R-134A'], ['water'], ['steam'],['dheeresh'], ['saransh']]
     pressure_units = [['Pa'],['Bar'],['mmHg'],['kg/m^2'],['atm'],['torr'],['lbf/inch^2']]
     temperature_units =[['celcius'], ['Kelvin'], ['Fahrenheit']]
     layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
         [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-        [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value="select the refrigerant",font= ("Calibri", 20),key="data_type")],
-        [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=False,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=False,key='Temperature')],
-        [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
-        [sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__"),sg.Drop(temperature_units,size=(10,1),auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=False,key="units")],
-        [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
+        [sg.Text("Calculation of Thermodynamic Property of " + name, auto_size_text= True, justification='left', font=("Algerian", 25))],
+        [sg.Text("Calculate "+name1, auto_size_text=True,justification='center',font=("Algerian",20))],
+        [sg.Text("Temperature", auto_size_text=True,justification='left',font=("Algerian",15)),sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__1"),sg.Drop(temperature_units,size=(10,1),default_value="select unit",auto_size_text=True,enable_events=True,font= ("Calibri", 20),key="units1")],
+        [sg.Text("Pressure", auto_size_text=True,justification='left',font=("Algerian",15)),sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__2"),sg.Drop(pressure_units,size=(10,1),default_value="select unit",auto_size_text=True,enable_events=True,font= ("Calibri", 20),key="units2")],
+        [sg.Button("CALCULATE",font=("Algerian",20),auto_size_button=True,enable_events=True,key="cal1")],
+        [sg.Text("Calculate "+ name2, auto_size_text=True,justification='center',font=("Algerian",20))],
+        [sg.Text("Temperature", auto_size_text=True,justification='left',font=("Algerian",15)),sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__3"),sg.Drop(temperature_units,size=(10,1),default_value="select unit",auto_size_text=True,enable_events=True,font= ("Calibri", 20),key="units3")],
+        [sg.Text("OR", auto_size_text=True,justification='left',font=("Algerian",15))],
+        [sg.Text("Pressure", auto_size_text=True,justification='left',font=("Algerian",15)),sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__4"),sg.Drop(pressure_units,size=(10,1),default_value="select unit",auto_size_text=True,enable_events=True,font= ("Calibri", 20),key="units4")],
+        [sg.Button("CALCULATE",font=("Algerian",20),auto_size_button=True,enable_events=True,key="calc2")],
         [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
     window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
     while True:
         event, values = window_2.read()
+        print
         if event == "PREVIOUS":
             window_2.close()
             callback()
             break
-
-        elif event =="Temperature":
-            a= values["data_type"]
-            window_2.close()
-            layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
-            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-            [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value = a,font= ("Calibri", 20),key="data_type")],
-            [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=False,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=True,key='Temperature')],
-            [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
-            [sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__",enable_events=True),sg.Drop(temperature_units,size=(10,1),default_value="celcius",auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=True,key="units")],
-            [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
-            [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
-            window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
-            counter ="T"
-        elif event == "Pressure":
-            a= values["data_type"]
-            window_2.close()
-            layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
-            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-            [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value=a,font= ("Calibri", 20),key="data_type")],
-            [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=True,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=False,key='Temperature')],
-            [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
-            [sg.Input(size=(25, 1), font=("Algerian", 25),key="__IN__",enable_events=True),sg.Drop(pressure_units,size=(10,1),default_value="Pa",auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=True,key="units")],
-            [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
-            [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
-            window_2 = sg.Window(title="CALCULATOR", layout = layout_2,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
-            counter= "P"
-        elif event == "RESULT":
-            value = values["__IN__"]
-            unit = values["units"]
-            d_type = values["data_type"]
+        elif event == "cal1":
+            value1 = values["__IN__1"]
+            value2 = values["__IN__2"]
+            unit1 = values["units1"]
+            unit2= values["units2"]
+            x = error_check(value1,value2,unit1,unit2)
+            '''
+            if x == True:
+                calculation(d_type,value,unit,counter)
+            else:
+                pass
+            '''
+        elif event == "calc2":
+            if values["__IN__3"] != "":
+                value1 = values["__IN__3"]
+                value2 = "0"
+                unit1 = values["units3"]
+                unit2 = "Randy Ortan"
+                x = error_check(value1,value2,unit1,unit2)
+                
+            elif values["__IN__4"] != "":
+                value2 = values["__IN__4"]
+                value1 = "0"
+                unit2= values["units4"]
+                unit1 = "Underwear"
+                x = error_check(value1,value2,unit1,unit2)
+            
+            elif values["__IN__3"] == "" and values["__IN__4"]=="":
+                value2 = ""
+                value1 = ""
+                unit2= "select unit"
+                unit1 = "select unit"   
+                x = error_check(value1,value2,unit1,unit2)                
+            '''
             x = error_check(d_type,value,unit,counter)
             if x == True:
                 calculation(d_type,value,unit,counter)
             else:
                 pass
+            '''
         elif event == "EXIT" or event == sg.WIN_CLOSED:
             break
 
@@ -110,19 +162,20 @@ def about_window():
             break
         elif event == "EXIT" or event == sg.WIN_CLOSED:
             break
-    window.close()
+    window_3.close()
 
-def error_check(data_type,value,unit,type):
-    if data_type == "select the refrigerant" or type == "none" or value == "":
-        if data_type == "select the refrigerant": 
-            sg.popup_cancel("select the refrigerant")
-        elif type == "none":
-            sg.popup_cancel("select the teperature or pressure")   
-        elif value == "":
-            sg.popup_cancel("enter the value")
+def error_check(value1,value2,unit1,unit2):
+    if value1 == "" or value2 == "" or unit1 == "select unit" or unit2 =="select unit":
+        if value1 == "": 
+            sg.popup_cancel("Enter Data")
+        elif value2 == "":
+            sg.popup_cancel("Enter Data")   
+        elif unit1 == "select unit":
+            sg.popup_cancel("Select the unit")
+        elif unit2 =="select unit":   
+            sg.popup_cancel("Select the unit") 
     else:
         return True
-
 
 def calculation(data_type,value,unit,type):
     comp1 =['R-134A']
@@ -140,7 +193,7 @@ def calculation(data_type,value,unit,type):
         str_file ="dheeresh"
     elif data_type == comp5:
         str_file ="saransh"
-    xlsx_file = Path('/Users/DHEERESH\Desktop/calculator', str_file + ".xlsx")
+    xlsx_file = Path('/Users/DHEERESH/Desktop/calculator', str_file + ".xlsx")
     file = openpyxl.load_workbook(xlsx_file)
     sheet = file.active
     i=1
@@ -162,12 +215,8 @@ def calculation(data_type,value,unit,type):
             break
 
 
-
 def callback():
     initial_window()
-
-
-
 
 if __name__=="__main__":
     initial_window()
