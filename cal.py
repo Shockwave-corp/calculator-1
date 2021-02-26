@@ -9,7 +9,7 @@ right_click_menu = ['Unused', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties
 def initial_window():
     sg.theme('Dark Amber 5')
     layout = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
-            [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 40))],
+            [sg.Text('WELCOME TO THERMODYNAMIC PROPERTIES CALCULATOR', auto_size_text=True ,justification='center', font=("Algerian", 40))],
             [sg.Button("GO TO CALCULATOR",auto_size_button=True,font=("Algerian", 25))],
             [sg.Button("ABOUT DEVELOPERS",auto_size_button=True,font=("Algerian", 25),)],
             [sg.Button("EXIT",auto_size_button=True)]]
@@ -29,19 +29,49 @@ def initial_window():
             break
 
 #Saransh is great
-
+def type_selector_window():
+    refrigerant_list = [['Steam Tables'],['Air'],['Tetraflouroethane-R134a']]
+    sg.theme('Dark Amber 5')
+    layout_type =[[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
+    [sg.Text("Select the Property",size=(20,2),auto_size_text=True,font= ("Calibri", 20))],
+    [sg.Button(refrigerant_list[0],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data")],
+    [sg.Button(refrigerant_list[1],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data1")],
+    [sg.Button(refrigerant_list[2],size=(20,2),enable_events=True,font= ("Calibri", 20),key="data2")],
+    [sg.Button("EXIT"),sg.Button("PREVIOUS")]]  
+    window_type = sg.Window(title="CALCULATOR", layout = layout_type,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='left')
+    while True:
+        event, values = window_type.read()
+        if event == "PREVIOUS":
+            window_type.close()
+            callback()
+            break
+        elif event == "data":
+            name = "Steam Tables"
+            window_type.close()
+            break
+        elif event == "data1":
+            name = "Air"
+            window_type.close()
+            break
+        elif event == "data2":
+            name = "Tetraflouroethane-R134a"
+            window_type.close()
+            break
+        elif event == "EXIT" or event == sg.WIN_CLOSED:
+            break
+    return name
+    
 def calculator_window():
+    name = type_selector_window()
+    print(name)
     x =False
     counter = "none"
     sg.theme('Dark Amber 5')
-    refrigerant_list = [['R-134A'], ['water'], ['steam'],['dheeresh'], ['saransh']]
     pressure_units = [['Pa'],['Bar'],['mmHg'],['kg/m^2'],['atm'],['torr'],['lbf/inch^2']]
     temperature_units =[['celcius'], ['Kelvin'], ['Fahrenheit']]
     layout_2 = [[sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
         [sg.Text('WELCOME', size=(40, 1), justification='center', font=("Algerian", 25))],
-        [sg.Drop(refrigerant_list,size=(20,2),auto_size_text=True,enable_events=True,default_value="select the refrigerant",font= ("Calibri", 20),key="data_type")],
-        [sg.Checkbox('Pressure',size=(20,2),auto_size_text=True,enable_events=True,default=False,key ='Pressure'),sg.Checkbox('Temperature',size=(20,2),auto_size_text=True,enable_events=True,default=False,key='Temperature')],
-        [sg.Text('Enter the value', size=(40, 1), justification='center', font=("Algerian", 25))],
+        [sg.Text("Calculation of Thermodynamic Property of "+ name, auto_size_text= True, justification='left', font=("Algerian", 25))],
         [sg.Input( size=(25, 1), font=("Algerian", 25),key="__IN__"),sg.Drop(temperature_units,size=(10,1),auto_size_text=True,enable_events=True,font= ("Calibri", 20),visible=False,key="units")],
         [sg.Button("RESULT",font=("Algerian",20),auto_size_button=True)],
         [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
@@ -140,7 +170,7 @@ def calculation(data_type,value,unit,type):
         str_file ="dheeresh"
     elif data_type == comp5:
         str_file ="saransh"
-    xlsx_file = Path('/Users/DHEERESH\Desktop/calculator', str_file + ".xlsx")
+    xlsx_file = Path('/Users/DHEERESH/Desktop/calculator', str_file + ".xlsx")
     file = openpyxl.load_workbook(xlsx_file)
     sheet = file.active
     i=1
@@ -160,8 +190,6 @@ def calculation(data_type,value,unit,type):
             i=i+1
         else:
             break
-
-
 
 def callback():
     initial_window()
