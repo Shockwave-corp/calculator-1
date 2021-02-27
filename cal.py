@@ -106,6 +106,7 @@ def calculator_window():
             unit1 = values["units1"]
             unit2= values["units2"]
             x = error_check(value1,value2,unit1,unit2)
+
             '''
             if x == True:
                 calculation(d_type,value,unit,counter)
@@ -133,16 +134,14 @@ def calculator_window():
                 unit2= "select unit"
                 unit1 = "select unit"   
                 x = error_check(value1,value2,unit1,unit2)                
-            '''
-            x = error_check(d_type,value,unit,counter)
-            if x == True:
-                calculation(d_type,value,unit,counter)
+            if x == True and values["__IN__3" != "" ]:
+                calculation(name2,value1,unit1,0)
+            elif x==True and values["__IN__4"!= ""]:
+                calculation(name2,value2,unit2,1)    
             else:
                 pass
-            '''
         elif event == "EXIT" or event == sg.WIN_CLOSED:
             break
-
 
 def about_window():
     sg.theme('Dark Amber 5')
@@ -154,6 +153,7 @@ def about_window():
         [sg.Text('Then God said,abcbsabcsandsnlnsadkfnsadnfsanfnsadlfnsldfdsfjlsdnfla')],
         [sg.Button("EXIT"),sg.Button("PREVIOUS")]]
     window_3 = sg.Window(title="CALCULATOR", layout = layout_3,resizable= True,right_click_menu=right_click_menu,default_button_element_size=(40,2),default_element_size=(40,5),auto_size_buttons=True,auto_size_text=True,element_justification='center')
+   
     while True:
         event, values = window_3.read()
         if event == "PREVIOUS":
@@ -177,22 +177,19 @@ def error_check(value1,value2,unit1,unit2):
     else:
         return True
 
-def calculation(data_type,value,unit,type):
-    comp1 =['R-134A']
-    comp2 =['water']
-    comp3= ['air']
-    comp4= ['dheeresh']
-    comp5=["saransh"]
-    if data_type == comp1:
-        str_file = "r1344a"
-    elif data_type == comp2:
-        str_file = "water"
-    elif data_type == comp3:
-        str_file ="air"
-    elif data_type == comp4:
-        str_file ="dheeresh"
-    elif data_type == comp5:
-        str_file ="saransh"
+def calculation(data_type,value,unit,k):
+    if data_type == "saturated Tetraflouroethane-R134a":
+        str_file = "saturated_R134a"
+    elif data_type == "saturated water":
+        str_file = "saturated_water"
+    elif data_type == "saturated air":
+        str_file ="saturated_air"
+    elif data_type == "saturated steam":
+        str_file ="saturated_steam"
+    if k==0:
+        file_name="temp_"+str_file
+    elif k==1:
+        file_name="pressure_" +str_file
     xlsx_file = Path('/Users/DHEERESH/Desktop/calculator', str_file + ".xlsx")
     file = openpyxl.load_workbook(xlsx_file)
     sheet = file.active
@@ -213,7 +210,6 @@ def calculation(data_type,value,unit,type):
             i=i+1
         else:
             break
-
 
 def callback():
     initial_window()
